@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp1
+{
+    struct Address
+    {
+        public string City { get; set; }
+        public string Street { get; set; }
+        public int HouseNumber { get; set; }
+
+        public Address(string city, string street, int houseNumber)
+        {
+            City = city;
+            Street = street;
+            HouseNumber = houseNumber;
+            Console.WriteLine($"Конструктор Address: {city}, {street}, {houseNumber}");
+        }
+
+        public void Display() => Console.WriteLine($"Адрес: г. {City}, ул. {Street}, д. {HouseNumber}");
+
+        public bool Check(Func<Address, bool> rule) => rule(this);
+    }
+
+    class Employee
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public Address HomeAddress { get; set; }
+
+        public event Action<string> OnAction;
+
+        public Employee(string name, int age, Address address)
+        {
+            Name = name; Age = age; HomeAddress = address;
+            Console.WriteLine($"Сотрудник: {name}, {age}");
+            OnAction?.Invoke($"Создан {name}");
+        }
+
+        public void Display()
+        {
+            Console.WriteLine($"{Name}, {Age}");
+            HomeAddress.Display();
+            OnAction?.Invoke($"Показан {Name}");
+        }
+    }
+
+    class Box<T>
+    {
+        private T item;
+        public event Action<string> OnAction;
+
+        public void Put(T value)
+        {
+            item = value;
+            Console.WriteLine($"Положили: {value}");
+            OnAction?.Invoke($"Предмет типа {typeof(T).Name} положен");
+        }
+
+        public T Get()
+        {
+            Console.WriteLine($"Достали: {item}");
+            OnAction?.Invoke($"Предмет типа {typeof(T).Name} получен");
+            return item;
+        }
+
+        //пример делегата
+        public void Change(Func<T, T> transformer)
+        {
+            if (transformer != null && item != null)
+            {
+                item = transformer(item);
+                Console.WriteLine("Содержимое изменено");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            //проверка адреса
+            Address addr = new Address("Екатеринбург", "Пушкина", 25);
+            addr.Display();
+            Console.WriteLine($"Дом < 100: {addr.Check(a => a.HouseNumber < 100)}");
+            Console.WriteLine();
+
+            //события сотрудника
+            Employee emp = new Employee("Вова", 17, addr);
+            emp.OnAction += msg => Console.WriteLine($"Событие {msg}");
+            emp.Display();
+            Console.WriteLine();
+
+            //коробка со строками и трансформацией
+            Box<string> box = new Box<string>();
+            box.OnAction += msg => Console.WriteLine($"Коробка {msg}");
+            box.Put("burger");
+            box.Change(s => s.ToUpper());
+            box.Get();
+            Console.WriteLine();
+
+            //коробка с адресом и трансформацией
+            Box<Address> addrBox = new Box<Address>();
+            addrBox.OnAction += msg => Console.WriteLine($"Адрес {msg}");
+            addrBox.Put(addr);
+            addrBox.Change(a => new Address("Москва", a.Street, a.HouseNumber));
+            addrBox.Get().Display();
+            Console.WriteLine();
+
+            //фильтрация
+            var emps = new List<Employee>
+            {
+                new Employee("Анна", 25, new Address("Москва", "Ленина", 10)),
+                new Employee("Иван", 30, new Address("Екатеринбург", "Мира", 5))
+            };
+
+            Console.WriteLine("Молодые (до 28):");
+            foreach (var e in emps)
+                if (e.Age < 28)
+                    Console.WriteLine($"- {e.Name}, {e.Age}");
+        }
+    }
+}
