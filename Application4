@@ -1,0 +1,121 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+    struct Address
+    {
+        public string City { get; set; }
+        public string Street { get; set; }
+        public int HouseNumber { get; set; }
+
+        public Address(string city, string street, int houseNumber)
+        {
+            City = city;
+            Street = street;
+            HouseNumber = houseNumber;
+            Console.WriteLine($"Вызван конструктор Address с параметрами: {city}, {street}, {houseNumber}");
+        }
+
+        public void DisplayAddress()
+        {
+            Console.WriteLine($"Адрес: г. {City}, ул. {Street}, д. {HouseNumber}");
+        }
+    }
+
+    class Employee
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public Address HomeAddress { get; set; }
+
+        public Employee()
+        {
+            Name = "Неизвестно";
+            Age = 0;
+            Console.WriteLine("Вызван конструктор Employee() без параметров");
+        }
+
+        public Employee(string name)
+        {
+            Name = name;
+            Age = 0;
+            Console.WriteLine($"Вызван конструктор Employee(string name) с именем: {name}");
+        }
+
+        public Employee(string name, int age)
+        {
+            Name = name;
+            Age = age;
+            Console.WriteLine($"Вызван конструктор Employee(string name, int age) с именем: {name}, возрастом: {age}");
+        }
+
+        public Employee(string name, int age, Address address)
+        {
+            Name = name;
+            Age = age;
+            HomeAddress = address;
+            Console.WriteLine($"Вызван конструктор Employee с именем: {name}, возрастом: {age} и адресом {address.City} {address.Street}");
+        }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine($"Сотрудник: {Name}, Возраст: {Age}");
+            HomeAddress.DisplayAddress();
+        }
+    }
+
+    class Box<T>
+    {
+        private T content;
+
+        public void Put(T item)
+        {
+            content = item;
+            Console.WriteLine($"В коробку положили: {item}");
+        }
+
+        public T Get()
+        {
+            Console.WriteLine($"Из коробки достали: {content}");
+            return content;
+        }
+
+        public void ShowType()
+        {
+            Console.WriteLine($"Тип содержимого коробки: {typeof(T).Name}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Address address = new Address("Екатеринбург", "Пушкина", 25);
+            address.DisplayAddress();
+
+            Console.WriteLine();
+
+            Employee employee = new Employee("Вова", 17, address);
+            employee.DisplayInfo();
+
+            Console.WriteLine();
+
+            Box<string> box = new Box<string>();
+            box.Put("burger");
+            box.Get();
+            box.ShowType();
+
+            Console.WriteLine();
+
+            Box<Address> addressBox = new Box<Address>();
+            addressBox.Put(address);
+            Address retrievedAddress = addressBox.Get();
+            retrievedAddress.DisplayAddress();
+            addressBox.ShowType();
+        }
+    }
+}
