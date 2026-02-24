@@ -2,73 +2,63 @@ using System;
 
 namespace ConsoleApp1
 {
-    struct Address
-    {
-        public string City { get; set; }
-        public string Street { get; set; }
-        public int HouseNumber { get; set; }
-
-        public Address(string city, string street, int houseNumber)
-        {
-            City = city;
-            Street = street;
-            HouseNumber = houseNumber;
-            Console.WriteLine($"Конструктор Address: {city}, {street}, {houseNumber}");
-        }
-
-        public void Display() => Console.WriteLine($"Адрес: г. {City}, ул. {Street}, д. {HouseNumber}");
-        public bool Check(Func<Address, bool> rule) => rule(this);
-    }
-
     class Employee
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public Address HomeAddress { get; set; }
-        public event Action<string> OnAction;
 
-        public Employee(string name, int age, Address address)
-        {
-            Name = name; Age = age; HomeAddress = address;
-            Console.WriteLine($"Сотрудник: {name}, {age}");
-            OnAction?.Invoke($"Создан {name}");
-        }
+        public Employee() { Name = "?"; Age = 0; }
+        public Employee(string name) { Name = name; Age = 0; }
+        public Employee(string name, int age) { Name = name; Age = age; }
 
-        public void Display()
-        {
-            Console.WriteLine($"Сотрудник: {Name}, Возраст: {Age}");
-            HomeAddress.Display();
-            OnAction?.Invoke($"Показан {Name}");
-        }
+        public void DisplayInfo() => Console.WriteLine($"Сотрудник: {Name}, {Age} лет");
     }
 
     class Box<T>
     {
-        private T item;
-        public event Action<string> OnAction;
-
-        public void Put(T value) { item = value; Console.WriteLine($"Положили: {value}"); OnAction?.Invoke($"Предмет типа {typeof(T).Name} положен"); }
-        public T Get() { Console.WriteLine($"Достали: {item}"); OnAction?.Invoke($"Предмет типа {typeof(T).Name} получен"); return item; }
+        private T content;
+        public void Put(T item) { content = item; Console.WriteLine($"Положили: {item}"); }
+        public T Get() { Console.WriteLine($"Достали: {content}"); return content; }
+        public void ShowType() => Console.WriteLine($"Тип: {typeof(T).Name}");
     }
+
+    delegate void Delegate1();
+    delegate int Delegate2(int a, int b);
+    delegate void Delegate3(string s);
 
     class Program
     {
-        static void Main()
+        static void Hello_World() => Console.WriteLine("Привет, мир!");
+        static void Bye_World() => Console.WriteLine("Пока, мир!");
+        static int Sum(int a, int b) { Console.WriteLine($"{a}*{b} = {a * b}"); return a * b; }
+        static int Mult(int a, int b) { Console.WriteLine($"{a}-{b} + {a}/{b} = {a - b + a / b}"); return a - b + a / b; }
+
+        static void Main(string[] args)
         {
-            Address addr = new Address("Ижевск", "Ленина", 89);
-            addr.Display();
-            Console.WriteLine($"Номер больше 50: {addr.Check(a => a.HouseNumber > 50)}");
-            Console.WriteLine();
 
-            Employee emp = new Employee("Салават", 19, addr);
-            emp.OnAction += msg => Console.WriteLine($"Событие: {msg}");
-            emp.Display();
-            Console.WriteLine();
+            Delegate1 del1 = Hello_World;
+            del1 += Bye_World;
+            del1();
 
+            Delegate2 math = Sum;
+            Console.WriteLine($"итог: {math(5, 3)}");
+
+            math = Mult;
+            Console.WriteLine($"итог: {math(5, 3)}");
+
+            Employee emp = new Employee("Салават", 19);
+            Delegate1 employeDel = emp.DisplayInfo;
+            employeDel();
+
+            Delegate2 lambda = (x, y) => x * x + y * y;
+            Console.WriteLine($"3^2 + 99^2 = {lambda(3, 99)}");
+
+            Employee employee = new Employee("Салават", 19);
             Box<string> box = new Box<string>();
-            box.OnAction += msg => Console.WriteLine($"Коробка: {msg}");
-            box.Put("книга");
+            box.Put("pizza");
             box.Get();
+            box.ShowType();
+
         }
     }
 }
