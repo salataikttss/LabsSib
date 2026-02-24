@@ -1,0 +1,119 @@
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using System.Xml.Schema;
+
+namespace ConsoleApp1
+{
+    internal class Program
+    {
+        public class Animal
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public Animal(string name, int age)
+            {
+                Name = name;
+                Age = age;
+            }
+
+            public virtual void MakeSound()
+            {
+                Console.WriteLine("Животное издает звук");
+            }
+
+            public void Eat()
+            {
+                Console.WriteLine($"{Name} ест");
+            }
+        }
+
+        public class Dog : Animal
+        {
+            public string Breed { get; set; }
+
+            public Dog(string name, int age, string breed) : base(name, age)
+            {
+                Breed = breed;
+            }
+
+            public override void MakeSound()
+            {
+                Console.WriteLine($"{Name} лает: Гав-гав!");
+            }
+
+            public void Fetch()
+            {
+                Console.WriteLine($"{Name} приносит мяч");
+            }
+        }
+
+        public class Cat : Animal
+        {
+            private string lazyText;
+            public bool IsLazy { get; set; }
+
+            public Cat(string name, int age, bool isLazy) : base(name, age)
+            {
+                IsLazy = isLazy;
+            }
+
+            public override void MakeSound()
+            {
+                Console.WriteLine($"{Name} мяукает: Мяу!");
+            }
+
+            public void Sleep()
+            {
+                if (IsLazy)
+                    lazyText = "Очень долго";
+                else
+                    lazyText = "Немного";
+                Console.WriteLine($"{Name} спит {lazyText}");
+            }
+        }
+        static void Main(string[] args)
+        {
+            Animal animal = new Animal("Просто животное", 5);
+            Dog dog = new Dog("Барсик", 3, "Такса");
+            Cat cat = new Cat("Мурка", 2, true);
+
+            animal.Eat();
+            dog.Eat();
+            cat.Eat();
+
+            Console.WriteLine();
+
+            animal.MakeSound();
+            dog.MakeSound();
+            cat.MakeSound();
+
+            Console.WriteLine();
+
+            dog.Fetch();
+            cat.Sleep();
+
+            Console.WriteLine();
+
+            Console.WriteLine($"Порода собаки: {dog.Breed}");
+            Console.WriteLine($"Имя кошки: {cat.Name}");
+            Console.WriteLine($"Ленивая ли кошка: {cat.IsLazy}");
+
+
+        }
+
+
+    }
+}
