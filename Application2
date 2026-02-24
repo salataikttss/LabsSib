@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+    class Employee
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+
+        public Employee()
+        {
+            Name = "Неизвестно";
+            Age = 0;
+            Console.WriteLine("Вызван конструктор Employee() без параметров");
+        }
+
+        public Employee(string name)
+        {
+            Name = name;
+            Age = 0;
+            Console.WriteLine($"Вызван конструктор Employee(string name) с именем: {name}");
+        }
+
+        public Employee(string name, int age)
+        {
+            Name = name;
+            Age = age;
+            Console.WriteLine($"Вызван конструктор Employee(string name, int age) с именем: {name}, возрастом: {age}");
+        }
+    }
+
+    class Box<T>
+    {
+        private T content;
+
+        public void Put(T item)
+        {
+            content = item;
+            Console.WriteLine($"В коробку положили: {item}");
+        }
+
+        public T Get()
+        {
+            Console.WriteLine($"Из коробки достали: {content}");
+            return content;
+        }
+
+        public void ShowType()
+        {
+            Console.WriteLine($"Тип содержимого коробки: {typeof(T).Name}");
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee employee = new Employee("Вова", 16);
+            Box<string> box = new Box<string>();
+            box.Put("burger");
+            box.Get();
+            box.ShowType();
+        }
+    }
+}
