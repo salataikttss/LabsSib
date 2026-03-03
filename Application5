@@ -2,63 +2,76 @@ using System;
 
 namespace ConsoleApp1
 {
-    class Employee
+    class Human
     {
         public string Name { get; set; }
         public int Age { get; set; }
 
-        public Employee() { Name = "?"; Age = 0; }
-        public Employee(string name) { Name = name; Age = 0; }
-        public Employee(string name, int age) { Name = name; Age = age; }
+        public Human() { Name = "?"; Age = 0; }
+        public Human(string name) { Name = name; Age = 0; }
+        public Human(string name, int age) { Name = name; Age = age; }
 
-        public void DisplayInfo() => Console.WriteLine($"Сотрудник: {Name}, {Age} лет");
+        public void DisplayInfo() => Console.WriteLine($"{Name}, {Age} лет");
     }
 
     class Box<T>
     {
-        private T content;
-        public void Put(T item) { content = item; Console.WriteLine($"Положили: {item}"); }
-        public T Get() { Console.WriteLine($"Достали: {content}"); return content; }
-        public void ShowType() => Console.WriteLine($"Тип: {typeof(T).Name}");
+        private T i;
+        public void Put(T item) { i = item; Console.WriteLine($"Put: {i}"); }
+        public T Get() { Console.WriteLine($"Get: {i}"); return i; }
     }
 
-    delegate void Delegate1();
-    delegate int Delegate2(int a, int b);
+    delegate void Delegate_Hello();
+    delegate int Delegate_Str(string a, string b);
     delegate void Delegate3(string s);
 
     class Program
     {
-        static void Hello_World() => Console.WriteLine("Привет, мир!");
-        static void Bye_World() => Console.WriteLine("Пока, мир!");
-        static int Sum(int a, int b) { Console.WriteLine($"{a}*{b} = {a * b}"); return a * b; }
-        static int Mult(int a, int b) { Console.WriteLine($"{a}-{b} + {a}/{b} = {a - b + a / b}"); return a - b + a / b; }
+        static void Hello_World()
+        {
+            Console.WriteLine("hello world");
+        }
+        static void Bye_World()
+        {
+            Console.WriteLine("buy world!");
+        }
+
+        static int summ_string(string a, string b)
+        {
+            string result = a + b;
+            Console.WriteLine($"{a} + {b} = {result}");
+            return result.Length;
+        }
 
         static void Main(string[] args)
         {
-
-            Delegate1 del1 = Hello_World;
+            Delegate_Hello del1 = Hello_World;
             del1 += Bye_World;
             del1();
 
-            Delegate2 math = Sum;
-            Console.WriteLine($"итог: {math(5, 3)}");
+            Delegate_Str summstr = summ_string;
 
-            math = Mult;
-            Console.WriteLine($"итог: {math(5, 3)}");
+            int length = summstr("hello", "world");
+            Console.WriteLine($"Длина строки: {length}");
 
-            Employee emp = new Employee("Салават", 19);
-            Delegate1 employeDel = emp.DisplayInfo;
+            Human human = new Human("Салават", 19);
+            Delegate_Hello employeDel = human.DisplayInfo;
             employeDel();
 
-            Delegate2 lambda = (x, y) => x * x + y * y;
-            Console.WriteLine($"3^2 + 99^2 = {lambda(3, 99)}");
+            Delegate_Str lambda = (x, y) => {
+                string combined = x + y;
+                Console.WriteLine($"Объединенная строка: {combined}");
+                return combined.Length;
+            };
 
-            Employee employee = new Employee("Салават", 19);
+            int result = lambda("hello", "world");
+            Console.WriteLine($"Длина строки: {result}");
+
+
+            Human hum = new Human("Салават", 19);
             Box<string> box = new Box<string>();
-            box.Put("pizza");
+            box.Put("data");
             box.Get();
-            box.ShowType();
-
         }
     }
 }
