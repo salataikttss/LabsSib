@@ -111,6 +111,7 @@ namespace app_31._03._26_winforms
 
         private void Form1_Load(object sender, EventArgs e)
         {
+        //.
         }
     }
 }
