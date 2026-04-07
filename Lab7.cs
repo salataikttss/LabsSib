@@ -40,7 +40,7 @@ public partial class Form1 : Form
             label1.Text = $"variable sym: value = {sym}, address = {addr1}";
 
             sym = '/';
-            label2.Text = $"variable sym после изменения: value = {sym}, address = {addr1}";
+            label2.Text = $"variable sym ГЇГ®Г±Г«ГҐ ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї: value = {sym}, address = {addr1}";
 
             // variable2
             int number = 42;
